@@ -1,39 +1,28 @@
 <?php
-    include ('includes/html_header.php');
-    include 'includes/functions.php';
-    
-    if (isset($_POST['stand'])){
-        $_SESSION['dealer'][] = drawRandomCard($deck);
-
-        ?>    
-        <h2>Dealer</h2>
-
-        <?php
-
-        echo displayDealer() . "<br />";
-
-        echo "The value of your hand is " . calculateHandValue($card_values_dealer); 
-
-        ?>
-
-        <h2>Player</h2>
-
-        <?php
-
-        echo displayPlayer() . "<br />";
-
-        echo "The value of your hand is " . calculateHandValue($card_values_player);
-        
-        
+    if($handValuePlayer > 21){
+        echo "<h1> Bust, You lose! </h1>";
     }
+    elseif($handValueDealer == 21){
+        echo "<h1> BLACKJACK for dealer! You lose! </h1>";
+    }
+    elseif($handValuePlayer == 21 && $handValueDealer != 21){
+        echo "<h1> BLACKJACK! You win!! </h1>";
+    }
+    elseif($handValuePlayer == 21 && $handValueDealer == 21){
+        echo "<h1> Both BLACKJACK, you lose! </h1>";
+    }
+    elseif($handValuePlayer && $handValueDealer > 21){
+        echo "<h1> Both bust! You lose! </h1>";
+    }
+    elseif($handValueDealer > $handValuePlayer && $handValueDealer <= 21){
+        echo "<h1> You lose!! </h1>";
+    }
+    elseif($handValuePlayer == $handValueDealer){
+        echo "<h1> Stand-off, you lose! </h1>";
+    }
+    else{
+        echo "<h1> You win! </h1>";
+    }
+    
+    $finish=1
 ?>
-
-<form method="post" action="index.php">
-    <input type="hidden" name="startOver" />
-    <button type="submit">START OVER</button>
-</form>
-<?php 
-    include('includes/html_footer.php');
-?>
-
-

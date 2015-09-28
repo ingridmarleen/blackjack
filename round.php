@@ -6,6 +6,8 @@
     if(isset($_POST['hit'])){
         $_SESSION['player'][] = drawRandomCard($deck);
         $_SESSION['dealer'][] = drawRandomCard($deck);
+        $handValueDealer = calculateHandValue(array_column($_SESSION['dealer'], 'value'));
+        $handValuePlayer = calculateHandValue(array_column($_SESSION['player'], 'value'));
     }
     
     ?>    

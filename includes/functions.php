@@ -1,12 +1,5 @@
 <?php
     session_start();       
-    /* ==================================================
-     * Constants
-     * =============================================== */
-    
-    define('DEALER_STAND_AT', 17);
-    define('PLAYER_STAND_AT', 21);
-
     /* ===================================================
      * Deck functions
      * ================================================ */
@@ -26,8 +19,8 @@
         return $deck;
     }
 
-    $deck = getCardDeck();
-    
+    $_SESSION['deck'] = getCardDeck();
+    $deck = $_SESSION['deck'];
     
     function drawRandomCard (&$deck) { 
         
@@ -63,6 +56,7 @@
          
     // Start a game
     
+    
     function startGame() {
 	// First game is two cards for each player
         
@@ -85,13 +79,15 @@
     // check values:
     // $start = startGame();
     // var_dump($start);
-        
+     
+    // calculate the value of the hand
+    
     function calculateHandValue($card_values) {
 
 	$return_value = 0; 
 	$aces = 0;
 
-	foreach($card_values as $key => $value) {
+	foreach($card_values as $value) {
             
             if($value != 1) {
                     $return_value = $return_value + $value;
@@ -113,7 +109,8 @@
 
 	return $return_value;
     }
-        
+    
+    // display the dealers cards
     function displayDealer(){
         
         $dealer_cards = array_column($_SESSION['dealer'], 'display');
@@ -123,6 +120,7 @@
         }
     }
 
+    // display the players cards
     function displayPlayer(){
         $player_cards = array_column($_SESSION['player'], 'display');
 
@@ -130,19 +128,50 @@
         echo $player_display . " ";
         }
     }
-	
-    if(isset($_SESSION)){
-        $card_values_dealer = array_column($_SESSION['dealer'], 'value');
-        $card_values_player = array_column($_SESSION['player'], 'value');
-        $handValueDealer = calculateHandValue($card_values_dealer);
-        $handValuePlayer = calculateHandValue($card_values_player);
-    }
     
-    // Compare value $dealer and $player and declare winner
-    /* if handvalue player > handvalue dealer !& > 21 -> player wins.
-     * if handvalue dealer > handvalue player !& > 21 -> dealer wins.
-     * if dealer and player have 21 -> dealer wins.
-     */
-    //test
+    $handValueDealer = calculateHandValue(array_column($_SESSION['dealer'], 'value'));
+    $handValuePlayer = calculateHandValue(array_column($_SESSION['player'], 'value'));
+    
+    if ($handValueDealer >= 21 || $handValuePlayer >= 21){
+        include_once('finish.php'); 
+    }
+                
+    // actions
+    $action = isset($_POST["do"]) ? $_POST["do"] : null;
+            
+    switch($action){
+        // get new cards and recalculate
+        case "HIT":
+            $_SESSION['player'][] = drawRandomCard($deck);
+            $handValuePlayer = calculateHandValue(array_column($_SESSION['player'], 'value'));
+
+            if ($handValueDealer < 17){
+                $_SESSION['dealer'][] = drawRandomCard($deck);
+                $handValueDealer = calculateHandValue(array_column($_SESSION['dealer'], 'value'));
+            }
+            
+            if ($handValueDealer >= 21 || $handValuePlayer >= 21){
+                include_once('finish.php'); 
+            }
+
+        break;
+
+        // player stands
+        case "STAND":
+            while ($handValueDealer < 17){
+                $_SESSION['dealer'][] = drawRandomCard($deck);
+                $handValueDealer = calculateHandValue(array_column($_SESSION['dealer'], 'value'));
+            }
+            include_once('finish.php');
+                        
+        break;
+
+        // player wants to start over
+        case "START OVER":
+            
+            header("location: index.php");                
+        
+        break;
+    }
     
 ?>
