@@ -1,17 +1,3 @@
-<?php
-if(isset($_SESSION)){
-        //remove PHPSESSID from browser
-        if (isset( $_COOKIE[PHPSESSID()])){
-        setcookie(oldID(), "", time()-3600, "/" );
-        //clear session from globals
-        $_SESSION = array();
-        //clear session from disk
-        session_destroy();
-        session_write_close();
-        }
-    }
-?>
-
 <!DOCTYPE HTML>
 <html lang="en-US">
 <head>

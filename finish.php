@@ -11,7 +11,7 @@
     elseif($handValuePlayer == 21 && $handValueDealer == 21){
         echo "<h1> Both BLACKJACK, you lose! </h1>";
     }
-    elseif($handValuePlayer && $handValueDealer > 21){
+    elseif($handValuePlayer > 21 && $handValueDealer > 21){
         echo "<h1> Both bust! You lose! </h1>";
     }
     elseif($handValueDealer > $handValuePlayer && $handValueDealer <= 21){

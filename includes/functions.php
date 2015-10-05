@@ -1,5 +1,6 @@
 <?php
-    session_start();       
+    session_start();  
+    
     /* ===================================================
      * Deck functions
      * ================================================ */
@@ -35,8 +36,8 @@
         else {
             $card_value = $card;
         }
-
-        $return_value = array('display' => $suit.$card,
+        $image = "$suit{$card}.png";
+        $return_value = array('display' => "<img src='cards/$image'>",
                               'value' => $card_value);                
                             // returns a two element array showing a card's suit & face value
 
@@ -168,7 +169,9 @@
 
         // player wants to start over
         case "START OVER":
-            
+            unset($_SESSION['deck']);
+            unset($_SESSION['dealer']);
+            unset($_SESSION['player']);
             header("location: index.php");                
         
         break;

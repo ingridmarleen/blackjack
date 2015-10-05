@@ -19,9 +19,8 @@
 
 ?>
 
-        <form method="post" action="index.php">
-            <input type="hidden" name="startOver" />
-            <button type="submit">START OVER</button>
+        <form method="post" action="play.php">
+            <input type="submit" name="do" value="START OVER" />   
         </form>
 
 <?php
