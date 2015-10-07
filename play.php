@@ -12,7 +12,7 @@
 
     echo displayDealer() . "<br />";
 
-    echo "The value of your hand is " . $handValueDealer; 
+    echo "The value of dealers hand is " . $handValueDealer; 
 
 ?>
 

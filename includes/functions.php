@@ -59,19 +59,19 @@
     
     
     function startGame() {
-	// First game is two cards for each player
+	// First game is one card for dealer, two for player
         
         $deck = getCardDeck();
         
-        $dealer = array(drawRandomCard($deck), drawRandomCard($deck));
+        $dealer = array(drawRandomCard($deck));
 	$player = array(drawRandomCard($deck), drawRandomCard($deck));
 	
 	return array($dealer, $player, $deck); 
     }
     
     if(!isset($_SESSION['player'])){
-        $_SESSION['player'] = startGame()[0];
-        $_SESSION['dealer'] = startGame()[1];
+        $_SESSION['player'] = startGame()[1];
+        $_SESSION['dealer'] = startGame()[0];
     }
     else{
         null;
@@ -116,8 +116,17 @@
         
         $dealer_cards = array_column($_SESSION['dealer'], 'display');
         
-        foreach ($dealer_cards as $dealer_display){
-        echo $dealer_display . " ";
+        if (count($dealer_cards)==1){
+            
+            foreach ($dealer_cards as $dealer_display){
+            echo $dealer_display . "<img src='cards/b1fv.png'>";
+            }
+        }
+        else
+        {
+            foreach ($dealer_cards as $dealer_display){
+            echo $dealer_display . " ";
+            }
         }
     }
 
@@ -130,12 +139,15 @@
         }
     }
     
+    // Declare variable to calculation and check for blackjacks 
     $handValueDealer = calculateHandValue(array_column($_SESSION['dealer'], 'value'));
     $handValuePlayer = calculateHandValue(array_column($_SESSION['player'], 'value'));
     
-    if ($handValueDealer >= 21 || $handValuePlayer >= 21){
-        include_once('finish.php'); 
+    if($handValuePlayer == 21){
+        echo "<h1> BLACKJACK! You've won!! </h1>";
+        $finish=1;
     }
+    
                 
     // actions
     $action = isset($_POST["do"]) ? $_POST["do"] : null;
@@ -145,16 +157,11 @@
         case "HIT":
             $_SESSION['player'][] = drawRandomCard($deck);
             $handValuePlayer = calculateHandValue(array_column($_SESSION['player'], 'value'));
-
-            if ($handValueDealer < 17){
-                $_SESSION['dealer'][] = drawRandomCard($deck);
-                $handValueDealer = calculateHandValue(array_column($_SESSION['dealer'], 'value'));
-            }
-            
-            if ($handValueDealer >= 21 || $handValuePlayer >= 21){
+                       
+            if ($handValuePlayer >= 21){
                 include_once('finish.php'); 
             }
-
+            
         break;
 
         // player stands
