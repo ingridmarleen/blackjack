@@ -1,9 +1,9 @@
 <?php
-
+    
     if(!isset($finish)){
 
 ?>
-        <form method="post" action="play.php">
+        <form method="post" action="index.php">
             <input type="submit" name="do" value="HIT" />
 
             <input type="submit" name="do" value="STAND" />
@@ -19,7 +19,7 @@
 
 ?>
 
-        <form method="post" action="play.php">
+        <form method="post" action="index.php">
             <input type="submit" name="do" value="START OVER" />   
         </form>
 

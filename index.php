@@ -1,18 +1,59 @@
-<!DOCTYPE HTML>
-<html lang="en-US">
-<head>
-    <meta charset="UTF-8">
-    <title>Welcome to Blackjack!</title>
-</head>
-<body>
-    <form method="post" action="play.php">
-            <input type="hidden" name="do" value="start" />
+<?php
+session_start();
+
+$action = isset($_POST["do"]) ? $_POST["do"] : null;
             
-    <h2>Welcome to Blackjack!</h2>
-    To start a game, please click 
-    <button type = 'submit'> START </button>
-    </form>
-</body>
-</html>
+switch($action){
+    case "START":
+        
+        include_once ('includes/play.php');
+
+    break;
+
+    // get new cards and recalculate
+    case "HIT":
+        
+        include_once ('includes/functions.php');
+        
+        $_SESSION['player'][] = drawRandomCard($deck);
+        $handValuePlayer = calculateHandValue(array_column($_SESSION['player'], 'value'));
+        
+        include_once ('includes/play.php');
+        
+        if ($handValuePlayer >= 21){
+            include_once('includes/finish.php'); 
+        }
+
+    break;
+
+    // player stands
+    case "STAND":
+        
+        include_once ('includes/functions.php');
+        
+        while ($handValueDealer < 17){
+            $_SESSION['dealer'][] = drawRandomCard($deck);
+            $handValueDealer = calculateHandValue(array_column($_SESSION['dealer'], 'value'));
+        }
+        
+        include_once ('includes/play.php');
+        
+        include_once('includes/finish.php');
+
+    break;
+
+    // player wants to start over
+    case "START OVER":
+        session_destroy();
+        include_once ('includes/start.php');                
+
+    break;
+
+    default:
+        include_once ('includes/start.php');
+
+    break;
+}
+
 
 
